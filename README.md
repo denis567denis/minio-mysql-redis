@@ -30,6 +30,7 @@
 
 ```bash
 $ npm install
+$ docker-compose up -d
 ```
 
 then go to http://localhost:9001/ and create a bucket named items
