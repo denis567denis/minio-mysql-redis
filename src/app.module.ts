@@ -18,7 +18,7 @@ import configuration from './config/configuration';
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
         host: configService.get<string>('database.host') || 'localhost',
-        port: configService.get<number>('database.port') || 3306,
+        port: configService.get<number>('database.port') || 3307,
         username: configService.get<string>('database.username') || 'root',
         password: configService.get<string>('database.password') || 'root',
         database: configService.get<string>('database.database') || 'items_db',
