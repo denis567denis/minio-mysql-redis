@@ -3,42 +3,50 @@ import {
   Get,
   Post,
   Body,
-  UploadedFile,
+  UploadedFiles,
   UseInterceptors,
   Query,
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserRole } from 'src/users/entities/user.entity';
 
+@UseGuards(JwtAuthGuard)
 @Controller('items')
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
+  @Roles(UserRole.AMMINISTRATORE)
+  @UseInterceptors(FilesInterceptor('images'))
   async create(
     @Body() createItemDto: CreateItemDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() file: Express.Multer.File[],
   ) {
     return this.itemsService.create(createItemDto, file);
   }
 
+  @Roles(UserRole.OPERATORE)
   @Get()
   async findAll(@Query('id') id?: string) {
     return this.itemsService.findAll(id);
   }
 
+  @Roles(UserRole.AMMINISTRATORE)
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FilesInterceptor('images'))
   async update(
     @Param('id') id: number,
     @Body() updateItemDto: UpdateItemDto,
-    @UploadedFile() file?: Express.Multer.File,
+    @UploadedFiles() file?: Express.Multer.File[],
   ) {
     return this.itemsService.update(id, updateItemDto, file);
   }

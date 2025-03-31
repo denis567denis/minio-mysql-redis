@@ -18,26 +18,33 @@ export class ItemsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async create(createItemDto: CreateItemDto, file: Express.Multer.File) {
-    const imageKey = await this.storageService.uploadFile(
-      file.originalname,
-      file.buffer,
-      file.size,
+  async create(createItemDto: CreateItemDto, files: Express.Multer.File[]) {
+    const imageKeys = await Promise.all(
+      files.map(async (file) => {
+        const key = await this.storageService.uploadFile(
+          `${Date.now()}-${file.originalname}`,
+          file.buffer,
+          file.size,
+        );
+        return key;
+      }),
     );
 
     const newItem = this.itemsRepository.create({
       ...createItemDto,
-      imageKey,
+      imageKeys,
     });
 
     const savedItem = await this.itemsRepository.save(newItem);
-    const imageUrl = await this.storageService.getFileUrl(savedItem.imageKey);
+    const imageUrls = await Promise.all(
+      imageKeys.map((key) => this.storageService.getFileUrl(key)),
+    );
 
     await this.cacheManager.del('all_items');
 
     return {
       ...savedItem,
-      imageUrl,
+      imageUrls,
     };
   }
 
@@ -59,10 +66,12 @@ export class ItemsService {
 
     const itemsWithUrls = await Promise.all(
       items.map(async (item) => {
-        const imageUrl = await this.storageService.getFileUrl(item.imageKey);
+        const imageUrls = await Promise.all(
+          item.imageKeys.map((key) => this.storageService.getFileUrl(key)),
+        );
         return {
           ...item,
-          imageUrl,
+          imageUrls,
         };
       }),
     );
@@ -75,35 +84,47 @@ export class ItemsService {
   async update(
     id: number,
     updateItemDto: UpdateItemDto,
-    file?: Express.Multer.File,
+    files?: Express.Multer.File[],
   ) {
     const item = await this.itemsRepository.findOne({ where: { id } });
     if (!item) {
       throw new NotFoundException(`Item with ID ${id} not found`);
     }
 
-    let imageKey = item.imageKey;
-    if (file) {
-      await this.storageService.deleteFile(item.imageKey);
-      imageKey = await this.storageService.uploadFile(
-        file.originalname,
-        file.buffer,
-        file.size,
+    let imageKeys = item.imageKeys;
+    if (files && files.length > 0) {
+      const newKeysImage = await Promise.all(
+        files.map(async (file) => {
+          const imageKey = await this.storageService.uploadFile(
+            file.originalname,
+            file.buffer,
+            file.size,
+          );
+          return imageKey;
+        }),
       );
-    }
 
+      await Promise.all(
+        newKeysImage.map(async (key) => {
+          await this.storageService.deleteFile(key);
+        }),
+      );
+
+      imageKeys = newKeysImage;
+    }
     const updatedItem = await this.itemsRepository.save({
       ...item,
       ...updateItemDto,
-      imageKey,
+      imageKeys,
     });
 
-    const imageUrl = await this.storageService.getFileUrl(updatedItem.imageKey);
-
+    const imageUrls = await Promise.all(
+      updatedItem.imageKeys.map((key) => this.storageService.getFileUrl(key)),
+    );
     await this.cacheManager.del('all_items');
     return {
       ...updatedItem,
-      imageUrl,
+      imageUrls,
     };
   }
 
@@ -112,7 +133,12 @@ export class ItemsService {
     if (!item) {
       throw new NotFoundException(`Item with ID ${id} not found`);
     }
-    await this.storageService.deleteFile(item.imageKey);
+
+    await Promise.all(
+      item.imageKeys.map(async (key) => {
+        await this.storageService.deleteFile(key);
+      }),
+    );
     await this.itemsRepository.remove(item);
     await this.cacheManager.del('all_items');
     return {

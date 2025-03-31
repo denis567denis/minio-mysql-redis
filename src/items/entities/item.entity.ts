@@ -29,6 +29,6 @@ export class Item {
   @Column()
   country: string;
 
-  @Column()
-  imageKey: string;
+  @Column({ type: 'json' })
+  imageKeys: string[];
 }

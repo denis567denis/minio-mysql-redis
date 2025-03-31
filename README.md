@@ -41,33 +41,77 @@ then go to http://localhost:9001/ and create a bucket named items
 # development
 $ npm run start
 
-```
+admin 
+email : user@mail.com
+password: root
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+get itmes by id  (Amministratore, Operatore)
+curl --location 'http://localhost:3000/items?id=2' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g'
 
-## Resources
+get all items (Amministratore, Operatore)
+curl --location 'http://localhost:3000/items' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g'
 
-Check out a few resources that may come in handy when working with NestJS:
+update item by id (Amministratore)
+curl --location --request PATCH 'http://localhost:3000/items/1' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g' \
+--form 'images=@"/C:/Users/Denis/Downloads/737df109-75c2-4454-a659-25bfa82acf6d.png"' \
+--form 'images=@"/C:/Users/Denis/Downloads/737df109-75c2-4454-a659-25bfa82acf6d.png"' \
+--form 'tipo="asdasd"' \
+--form 'stato="123123"' \
+--form 'incaricato="denis"'
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+delete item by id  (Amministratore)
+curl --location --request DELETE 'http://localhost:3000/items/1' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g'
 
-## Support
+user create   (Amministratore)
+curl --location 'http://localhost:3000/users' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g' \
+--data-raw '{
+    "email": "den4ick@mail.ru",
+    "password": "denisdenis",
+    "role": "Amministratore"
+}'
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+update user  (Amministratore)
+curl --location --request PUT 'http://localhost:3000/users/1' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g' \
+--data '{
+    "password": "denisdenis",
+    "role": "Amministratore"
+}'
 
-## Stay in touch
+get all users  (Amministratore)
+curl --location 'http://localhost:3000/users' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g' \
+--data ''
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+get user by id  (Amministratore)
+curl --location 'http://localhost:3000/users/1' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g' \
+--data ''
 
-## License
+delete user by id  (Amministratore)
+curl --location --request DELETE 'http://localhost:3000/users/3' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiZGVuaXNAbWFpbC5ydSIsInJvbGUiOiJPcGVyYXRvcmUiLCJpYXQiOjE3NDM0NDMxNjYsImV4cCI6MTc0MzQ0Njc2Nn0.7Ej_MoUiiUhR8DQgTuFD37CGb5wSexHUqUipzre7M6g' \
+--data ''
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+register user 
+curl --location 'http://localhost:3000/auth/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email":"denis@mail.ru",
+    "password": "denis"
+}'
+
+login user 
+curl --location 'http://localhost:3000/auth/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email":"denis@mail.ru",
+    "password": "denis"
+}'

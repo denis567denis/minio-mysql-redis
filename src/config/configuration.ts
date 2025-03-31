@@ -3,10 +3,10 @@ import { registerAs } from '@nestjs/config';
 export default registerAs('config', () => ({
   database: {
     host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || '3307', 10),
-    username: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || 'root',
-    database: process.env.DB_DATABASE || 'items_db',
+    port: parseInt(process.env.DB_PORT, 10),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     synchronize: process.env.DB_SYNCHRONIZE === 'true',
   },
   redis: {
@@ -20,5 +20,8 @@ export default registerAs('config', () => ({
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY,
     bucketName: process.env.MINIO_BUCKET_NAME,
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
   },
 }));
