@@ -63,12 +63,16 @@ export class AppModule implements OnApplicationBootstrap {
   private async createAdminIfNotExists() {
     const adminEmail = 'user@mail.com';
     const adminPassword = 'root';
+    const firstName = 'root';
+    const lastName = 'root';
 
     if (!adminEmail || !adminPassword) return;
 
     const existingAdmin = await this.usersService.findOneByEmail(adminEmail);
     if (!existingAdmin) {
       await this.usersService.create({
+        firstName,
+        lastName,
         email: adminEmail,
         password: adminPassword,
         role: UserRole.AMMINISTRATORE,

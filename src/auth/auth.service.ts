@@ -26,7 +26,6 @@ export class AuthService {
       throw new ConflictException('Email already registered');
     }
 
-    console.log(registerUserDto);
     const user = await this.usersService.create({
       ...registerUserDto,
       role: UserRole.OPERATORE,

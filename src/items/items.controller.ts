@@ -25,7 +25,7 @@ export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
   @Post()
-  @Roles(UserRole.AMMINISTRATORE)
+  @Roles(UserRole.AMMINISTRATORE, UserRole.COMMERCIALE, UserRole.DIRETTORE)
   @UseInterceptors(FilesInterceptor('images'))
   async create(
     @Body() createItemDto: CreateItemDto,
@@ -40,7 +40,7 @@ export class ItemsController {
     return this.itemsService.findAll(id);
   }
 
-  @Roles(UserRole.AMMINISTRATORE)
+  @Roles(UserRole.AMMINISTRATORE, UserRole.COMMERCIALE, UserRole.DIRETTORE)
   @Patch(':id')
   @UseInterceptors(FilesInterceptor('images'))
   async update(
@@ -51,6 +51,7 @@ export class ItemsController {
     return this.itemsService.update(id, updateItemDto, file);
   }
 
+  @Roles(UserRole.AMMINISTRATORE, UserRole.COMMERCIALE, UserRole.DIRETTORE)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.itemsService.remove(id);

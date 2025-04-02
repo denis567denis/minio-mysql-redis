@@ -26,19 +26,14 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
-    console.log(10, createUserDto.password);
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userDto } = createUserDto;
-    console.log(userDto);
-    console.log(hashedPassword);
     const user = this.usersRepository.create({
       ...userDto,
       password: hashedPassword,
     });
-
-    console.log(user);
 
     const savedUser = await this.usersRepository.save(user);
     return savedUser;
