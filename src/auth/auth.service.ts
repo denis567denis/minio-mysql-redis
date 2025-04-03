@@ -8,7 +8,6 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { UserRole } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -28,15 +27,11 @@ export class AuthService {
 
     const user = await this.usersService.create({
       ...registerUserDto,
-      role: UserRole.OPERATORE,
     });
 
     return {
       message: 'Registration successful',
-      user: {
-        id: user.id,
-        email: user.email,
-      },
+      user,
     };
   }
 
